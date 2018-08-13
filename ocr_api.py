@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify, make_response
-from new_main import run
+from main import run
 
 app = Flask(__name__)
 
@@ -17,8 +17,8 @@ def create_task():
             'name': image['name']
         }
         images.append(new_image)
-    if run(images) is not None:
-        return jsonify({'images': images}), 201
+    """if run(images) is not None:
+        return jsonify({'images': images}), 201"""
 
 @app.errorhandler(404)
 def not_found(error):

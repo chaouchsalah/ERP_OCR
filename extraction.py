@@ -164,13 +164,14 @@ def multilines_component(lines,component):
     if numbers is not None:
         return numbers
     return None 
-# Extract the number of facture
+# Extract the number of facture if inline
 def extract_facture(lines):
     result = re.search(extract.facture,lines)
     if result is not None:
         text,start,_ = extract_match(result,lines)
         numbers = extract_numbers_facture(text)
         if numbers is not None:
+            # Extract the date if found on the same line
             result = re.search(r'[\s]du[\s]',lines[start:])
             if result is not None:
                 span = result.span()
@@ -183,6 +184,7 @@ def extract_facture(lines):
                     extracted_data['date_facture'] = lines[start:start+end]
             return numbers
     return None
+# Extract the number of facture if it's not on the same line
 def extract_facture_multilines(lines):
     found = False
     date = False
@@ -260,10 +262,19 @@ def extract_adresse_inline(line,field):
     result = re.search(extract.adresse_inline,line)
     if result is not None:
         _,_,end = extract_match(result,line)
+        # Ignore field adresse ip
         if line[end:end+2] != 'ip':
             return line[end:]
     return None
-# Extract the field 'adresse' if number of line > 1
+def nthline_adresse(line):
+    # Format of an adresse line
+    result = re.search(extract.nthline_adresse,line)
+    _,start,_ = extract_match(result,line)
+    if result is not None:
+        found = True
+        return [found,line[start:]]
+    return None
+# Extract the field 'adresse' if number of lines > 1
 def extract_adresse_multilines(lines,field):
     found = False
     adresse = ''
@@ -271,26 +282,25 @@ def extract_adresse_multilines(lines,field):
         if not found:
             result = re.search(extract.adresse_multilines,line)
             if result is not None:
-                result = re.search(r'[0-9]+[\s][a-z]+|[a-z]+[\s][a-z]+',line)
-                _,start,_ = extract_match(result,line)
+                result = nthline_adresse(line)
                 if result is not None:
-                    found = True
-                    adresse += line[start:]
+                    found = result[0]
+                    adresse += result[1]
         else:
             if len(line.strip())>0:
-                result = re.search(r'[0-9]+[\s][a-z]+|[a-z]+[\s][a-z]+',line)
-                _,start,_ = extract_match(result,line)
+                result = nthline_adresse(line)
                 if result is not None:
-                    found = True
-                    adresse += line[start:]
+                    found = result[0]
+                    adresse += result[1]
                 found = False
         if adresse != '' and not found:
             return adresse
     return None
+infos = ['rc','if','ice','patente','cnss']
 # Check if field has not been already extracted
 # Check if field is in text
 def verify(field,extraction,text):
-    if field not in extracted_data:
+    if field not in extracted_data or field in infos:
         variable = extraction(text,field)
         if variable is not None:
             if field=='tva' and '%' not in variable:
@@ -299,7 +309,6 @@ def verify(field,extraction,text):
                 extracted_data[field] = variable
 # TVA 2 cases : 'montant' or 'percent'
 components = ['ht','tva','ttc','tva']
-infos = ['rc','if','ice','patente','cnss']
 extracted_data = {}
 def run(filename):
     global extracted_data

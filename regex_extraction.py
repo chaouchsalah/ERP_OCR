@@ -177,4 +177,5 @@ class RegexExtractor:
             expressions.append(r'[\s]*{0}[\s]*'.format(keyword))
         expressions = r'|'.join(expressions)
         self.adresse_multilines = re.compile(expressions)
+        self.nthline_adresse = re.compile(r'[0-9]+[\s][a-z]+|[a-z]+[\s][a-z]+')
 

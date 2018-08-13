@@ -4,7 +4,8 @@ import postprocessing
 import extraction
 import contours
 from os import listdir
-from multiprocessing.dummy import Pool as ThreadPool 
+from multiprocessing.dummy import Pool as ThreadPool
+import cProfile
 
 images = []
 for i in range(1,4):
@@ -24,8 +25,9 @@ def extract(filename,inverse=False,resize=False):
 
 # Combine 2 extracted data objects into 1
 def combine_extracted(extracted_data1,extracted_data2):
+    cases = ['if','cnss','patente','rc']
     for data in extracted_data2:
-        if data not in extracted_data1:
+        if data not in extracted_data1 or data in cases:
             extracted_data1[data] = extracted_data2[data]
     return extracted_data1
 
@@ -42,17 +44,15 @@ def process(filename):
             if '.jpg' in image:
                 extracted_data2 = extract(file_path+'/'+image,False,True)
                 extracted_data = combine_extracted(extracted_data,extracted_data2)
-    """elif is_inverse(extracted_data):
+    elif is_inverse(extracted_data):
         extracted_data2 = extract(filename,True,False)
-        extracted_data = combine_extracted(extracted_data,extracted_data2)"""
+        extracted_data = combine_extracted(extracted_data,extracted_data2)
     print(extracted_data)
 
 def run():
-    for image in images:
-        process(image)
-    """pool = ThreadPool(4) 
+    pool = ThreadPool(4) 
     pool.map(process, images)
     pool.close()
-    pool.join()"""
+    pool.join()
 
 run()

@@ -7,22 +7,31 @@ from symspell import SymSpell
 build_regex = RegexBuilder()
 spell = SymSpell()
 spell.load_dictionary('new_big.txt')
+# Characters to ignore
 special_chars = [':','.','\n','%','$','€']
+# Extract the values(text,start,end) from the object re.match
+def extract_match(result,line):
+    # The tuple that stores the start and finish of the match
+    span = result.span()
+    start = span[0]
+    end = span[1]
+    # The text that was matched
+    text = line[start:end]
+    return text,start,end
 # Separate date from other numbers
 def separate_date(line):
     result = re.search(build_regex.date,line)
     if result is not None:
-        span = result.span()
-        start = span[0]
-        end = span[1]
+        _,start,end = extract_match(result,line)
         line = line[:start+1]+' '+line[start+1:end-1]+' '+line[end-1:]
         matches = re.finditer('/',line)
         matches = tuple(matches)
+        # If there is less than 2 '/' the date is not formatted correctly
         if len(matches)<2 and len(matches)>0:
             for match in matches:
-                span = match.span()
-                start = span[0]
+                _,start,_ = extract_match(match,line)
                 line = line[:start-2]+'/'+line[start-2:]
+        # OCR edge cases
         line = line.replace('O','0')
         line = line.replace('%','')
         line = line.replace('J','')
@@ -35,9 +44,7 @@ def abrv_rm(line):
         new_line = ''
         start_line = 0
         for result in results:
-            span = result.span()
-            start = span[0]
-            end = span[1]
+            _,start,end = extract_match(result,line)
             word = line[start:end].replace('.','')
             new_line += line[start_line:start]
             new_line += word
@@ -82,7 +89,7 @@ def possible_word(word):
     for char in word:
         if char.isalpha():
             letters += 1
-    return letters >= len(word)-letters or word[:5] == '(212)'
+    return letters >= len(word)-letters or word[:5] == '(212)' # Second condition to check if it's a tel
 # Remove lines with a character or less
 def remove_empty_line(line):
     return None if len(line.strip())<=1 else line
@@ -149,6 +156,14 @@ def remove_unkonwn_word(line):
 # Remove the words with only 1 letter
 def remove_one_letter_word(line):
     new_line = []
+    results = re.finditer(build_regex.abrv_dot,line)
+    results = tuple(results)
+    if len(results)>0:
+        for result in results:
+            _,start,end = extract_match(result,line)
+            match = line[start:end].strip()
+            match = match.replace(' ','')
+            line = line[:start]+' '+match+' '+line[end:]
     line = line.split(' ')
     for word in line :
         word_test = word.strip()
@@ -172,6 +187,8 @@ def format_line(line):
     line = check_num(line)
     line = check_net(line)
     line = correct_numbers(line)
+    """if line is not None and 'C .N.S.S.' in line:
+        print(line)"""
     line = remove_one_letter_word(line)
     line = remove_empty_line(line)
     if line is None:
@@ -197,7 +214,9 @@ def spell_correction(line):
         for word in line:
             if len(word.strip())>1 and not re.match(build_regex.number_format,word):
                 word = re.sub(build_regex.dot_end,'',word)
+                # If it's not a phone number
                 if '(212)' not in word:
+                    # Correct spelling mistakes
                     corrected = spell.lookup_compound(word.lower(),DISTANCE)[0].term
                     if corrected != False:
                         nbr_correction += 1
@@ -286,6 +305,8 @@ def run(filename):
     print('Post-processing of file : '+filename)
     file = open(filename)
     lines = file.readlines()
+    """if filename == 'cropped/4.txt':
+        print(lines)"""
     new_file = map(format_spell,lines)
     result_file = open(filename,'w+',encoding='utf8')
     result_file.writelines(new_file)

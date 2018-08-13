@@ -5,10 +5,14 @@ import tempfile
 import numpy as np
 
 cropped = []
+
+# Check if image is close enough to be a replicate
 def between(val1,val2):
     if val2 <= val1+10 and val2 >= val1-10:
         return True
     return False
+
+# Check if image is a replicate
 def exist(arr):
     for crop in cropped:
         if between(crop[0],arr[0]) and between(crop[1],arr[1]):
@@ -18,8 +22,6 @@ def exist(arr):
 def run(image_name):
     global cropped
     cropped = []
-    im = Image.open(image_name)
-    im.save(image_name, dpi=(300,300))
     image = cv2.imread(image_name)
     gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     _,thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
@@ -27,7 +29,7 @@ def run(image_name):
 
     j=0
     i=0
-    while j<=15:
+    while j<=10:
         dilated = cv2.dilate(thresh,kernel,iterations = j)
         # Extract contours from image
         _,contours,_ = cv2.findContours(dilated,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)

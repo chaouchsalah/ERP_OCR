@@ -53,7 +53,7 @@ class RegexBuilder:
         return r'|'.join(expressions)
     # Correct some numbers mistakes
     def correct_numbers(self):
-        # Numbers with wero at the end separated
+        # Numbers with zero at the end separated
         expression = r'[0-9]+[\s]{1,2}[Oo0][\s]'
         self.zero_end = re.compile(expression)
     def generate_components(self,component):
@@ -114,9 +114,9 @@ class RegexBuilder:
     def white_space(self):
         self.whitespace = re.compile(r'[\s]+')
     def abrv_possible(self,term):
-        possibility = r'[\s]*'
+        possibility = r'(?i)[\s]*'
         for letter in term:
-            possibility += letter+'[.]*'
+            possibility += letter+r'[\s]?[.]?'
         return possibility + r'[\s]+'
     # Remove dots from abreviations
     def abrv_dot_extraction(self):
@@ -124,7 +124,8 @@ class RegexBuilder:
         expressions = []
         for term in terms:
             expressions.append(self.abrv_possible(term))
-        self.abrv_dot = r'|'.join(expressions)
+        expressions = r'|'.join(expressions)
+        self.abrv_dot = re.compile(expressions)
     # Regex for date
     def date_format(self):
         expressions = [r'[^\s][0-9]{2}[/\'][0-9]{2}[/\'][0-9]{4}[^\s]',
