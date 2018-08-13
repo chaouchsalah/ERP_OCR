@@ -67,7 +67,7 @@ def run(image,inverse=False,resize=False):
         image_name = image_name[0]
     else:
         image_name = ''.join(image_name[0:len(image_name)-2])
-    print('Pre-processing image : '+image_name)
+    #print('Pre-processing image : '+image_name)
     filename = image_name+'-processed.png'
     if resize:
         kernel_value = (5,5)
@@ -78,4 +78,4 @@ def run(image,inverse=False,resize=False):
     cv2.imwrite(filename,image)
     im = Image.open(filename)
     im.save(filename, dpi=(300,300))
-    print('Pre-processing finished')
+    #print('Pre-processing finished')

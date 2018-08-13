@@ -4,11 +4,12 @@ import postprocessing
 import extraction
 import contours
 from os import listdir
+import os
 from multiprocessing.dummy import Pool as ThreadPool
-import cProfile
+import glob
 
 images = []
-for i in range(1,4):
+for i in range(4,5):
     filename = 'test'+str(i)+'.jpg'
     images.append(filename)
 
@@ -44,15 +45,14 @@ def process(filename):
             if '.jpg' in image:
                 extracted_data2 = extract(file_path+'/'+image,False,True)
                 extracted_data = combine_extracted(extracted_data,extracted_data2)
+                #os.remove(file_path+'/'+image)
     elif is_inverse(extracted_data):
         extracted_data2 = extract(filename,True,False)
         extracted_data = combine_extracted(extracted_data,extracted_data2)
     print(extracted_data)
 
 def run():
-    pool = ThreadPool(4) 
-    pool.map(process, images)
-    pool.close()
-    pool.join()
+    for image in images:
+        process(image)
 
 run()

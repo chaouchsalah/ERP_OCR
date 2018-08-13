@@ -1,0 +1,2 @@
+poll    no  .  5     ip ht aaihiana-w   rc -iri--l.h en al . ip rule  stay al tatie 
+

@@ -6,8 +6,8 @@ class RegexExtractor:
     terms_tva = ['taux','tva','total tva','tva port']
     terms_ht = ['sous total','base','total ht','total dh ht']
     terms_rc = ['rc']
-    terms_if = ['if']
-    terms_ice = ['ice']
+    terms_if = ['if','f']
+    terms_ice = ['ice','icf']
     terms_patente = ['patente','tp','taxe professionnelle']
     terms_cnss = ['cnss']
     def __init__(self):
@@ -96,7 +96,8 @@ class RegexExtractor:
         return expressions
     # All possible if regex
     def if_component(self,term):
-        expressions = [r'{0}[\s]*[:]?[\s]*[0-9]+'.format(term)]
+        expressions = [r'{0}[\s]*[:]?[\s]*[0-9]+'.format(term),
+                        r'(?i)[0-9][.]{0}[.][\s]*[0-9]+'.format(term)]
         return expressions
     # All possible ice regex
     def ice(self,term):

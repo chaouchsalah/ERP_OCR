@@ -29,7 +29,7 @@ def run(image_name):
 
     j=0
     i=0
-    while j<=10:
+    while j<=15:
         dilated = cv2.dilate(thresh,kernel,iterations = j)
         # Extract contours from image
         _,contours,_ = cv2.findContours(dilated,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
@@ -39,7 +39,7 @@ def run(image_name):
             # Extract the rectangle bounding contours
             [x,y,w,h] = cv2.boundingRect(contour)
             # Ignore small and large images
-            if (h>400 and w>400) or w<1600:
+            if (h>500 and w>400) or w<1600 or (w<400 and h<400):
                 continue
             # Check for replicate
             if not exist([x,y,w,h]):

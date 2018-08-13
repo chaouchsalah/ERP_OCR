@@ -447,7 +447,7 @@ class SymSpell():
         hs |= l_mask
         return hs
 
-    def _parse_words(self, text, filters='!"#€%&()*+,-/:;<=>?@[\\]^_`{}~\t\n', lower=True, split=' '):
+    def _parse_words(self, text, filters='!"#€%&()*+,/:;<=>?@[\\]^_`{}~\t\n', lower=True, split=' '):
         if lower:
             text = text.lower()
 

@@ -11,7 +11,7 @@ def run(image):
     else:
         image = image_name[0:len(image_name)-2]
     filename = image+'-processed.png'
-    print('OCR step begins for image : '+image)
+    #print('OCR step begins for image : '+image)
     output_file = image
     comm=['tesseract',filename,output_file,
         '-l',language,
@@ -20,4 +20,4 @@ def run(image):
         '-psm','6']
     subprocess.run(comm, shell=True)
     os.remove(filename)
-    print('OCR step finishes')
+    #print('OCR step finishes')

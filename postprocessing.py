@@ -147,6 +147,8 @@ def remove_unkonwn_word(line):
                             new_line.append('\n')
                         elif re.match(r'[:][0-9]',word) is not None:
                             new_line.append(word)
+                        elif re.match(r'[a-zA-Z]+[0-9]+[-]?[0-9]*',word) is not None:
+                            new_line.append(word)
                 else:
                     new_line.append(word)
             else:
@@ -187,8 +189,6 @@ def format_line(line):
     line = check_num(line)
     line = check_net(line)
     line = correct_numbers(line)
-    """if line is not None and 'C .N.S.S.' in line:
-        print(line)"""
     line = remove_one_letter_word(line)
     line = remove_empty_line(line)
     if line is None:
@@ -288,6 +288,8 @@ def format_spell(line):
     line = format_line(line)
     if line is not None:
         line = spell_correction(line)
+        if 'BC18-' in line:
+            print(line)
         line = remove_empty_line(line)
         if line is not None:
             line = format_numbers(line)
@@ -302,13 +304,12 @@ def run(filename):
     else:
         filename = image_name[0:len(image_name)-2]
     filename += '.txt'
-    print('Post-processing of file : '+filename)
+    #print('Post-processing of file : '+filename)
     file = open(filename)
     lines = file.readlines()
-    """if filename == 'cropped/4.txt':
-        print(lines)"""
     new_file = map(format_spell,lines)
+    filename = filename.split('.')[0]+'result.txt'
     result_file = open(filename,'w+',encoding='utf8')
     result_file.writelines(new_file)
     result_file.close()
-    print('Post-processing finished')
+    #print('Post-processing finished')
