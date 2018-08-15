@@ -18,9 +18,9 @@ def is_inverse(extracted_data):
     e = extracted_data
     return 'if' not in e or 'cnss' not in e or 'patente' not in e or 'rc' not in e
 
-def extract(filename,inverse=False,resize=False):
-    preprocessing.run(filename,inverse,resize)
-    processing.run(filename)
+def extract(filename,inverse=False,resize=False,facture=False):
+    preprocessing.run(filename,inverse,resize,facture)
+    processing.run(filename,facture)
     postprocessing.run(filename)
     return extraction.run(filename)
 
@@ -34,6 +34,9 @@ def combine_extracted(extracted_data1,extracted_data2):
 
 def process(filename):
     extracted_data = extract(filename)
+    if 'facture' not in extracted_data:
+        extracted_data2 = extract(filename,False,False,True)
+        extracted_data = combine_extracted(extracted_data,extracted_data2)
     # If facture not found
     if 'facture' not in extracted_data:
         # Split image into multiple parts
@@ -43,16 +46,25 @@ def process(filename):
         images = listdir(file_path)
         for image in images:
             if '.jpg' in image:
-                extracted_data2 = extract(file_path+'/'+image,False,True)
+                extracted_data2 = extract(file_path+'/'+image,False,True,False)
                 extracted_data = combine_extracted(extracted_data,extracted_data2)
-                #os.remove(file_path+'/'+image)
-    elif is_inverse(extracted_data):
-        extracted_data2 = extract(filename,True,False)
+                os.remove(file_path+'/'+image)
+    if is_inverse(extracted_data):
+        extracted_data2 = extract(filename,True,False,False)
         extracted_data = combine_extracted(extracted_data,extracted_data2)
-    print(extracted_data)
+    for data in extracted_data:
+        extracted_data[data] = extracted_data[data].replace('\n',' ').strip()
+    return extracted_data
 
-def run():
+def run(images):
+    results = []
     for image in images:
-        process(image)
+        results.append(process(image))
+    return results
 
-run()
+"""def run():
+    results = []
+    for image in images:
+        results.append(process(image))
+    print(results)
+run()"""

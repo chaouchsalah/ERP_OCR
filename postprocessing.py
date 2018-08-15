@@ -36,6 +36,12 @@ def separate_date(line):
         line = line.replace('%','')
         line = line.replace('J','')
     return line
+def combine_date(line):
+    result = re.search(build_regex.date_spaces,line)
+    if result is not None:
+        text,start,end = extract_match(result,line)
+        return line[:start]+text.replace(' ','')+line[end:]
+    return line
 # Remove dots from abreviations
 def abrv_rm(line):
     results = re.finditer(build_regex.abrv_dot,line)
@@ -149,6 +155,8 @@ def remove_unkonwn_word(line):
                             new_line.append(word)
                         elif re.match(r'[a-zA-Z]+[0-9]+[-]?[0-9]*',word) is not None:
                             new_line.append(word)
+                        elif re.match(r'[+][0-9]{2,}',word) is not None:
+                            new_line.append(word)
                 else:
                     new_line.append(word)
             else:
@@ -193,6 +201,7 @@ def format_line(line):
     line = remove_empty_line(line)
     if line is None:
         return line
+    line = combine_date(line)
     line = remove_unkonwn_word(line)
     line = remove_empty_line(line)
     if line is None:
@@ -215,7 +224,7 @@ def spell_correction(line):
             if len(word.strip())>1 and not re.match(build_regex.number_format,word):
                 word = re.sub(build_regex.dot_end,'',word)
                 # If it's not a phone number
-                if '(212)' not in word:
+                if '(212)' not in word and '+212' not in word:
                     # Correct spelling mistakes
                     corrected = spell.lookup_compound(word.lower(),DISTANCE)[0].term
                     if corrected != False:
@@ -224,8 +233,6 @@ def spell_correction(line):
                         if '\n' in word:
                             corrected += '\n'
                         new_line.append(corrected)
-                    else :
-                        new_line.append(word)
                 else :
                     new_line.append(word)
             else:
@@ -288,8 +295,6 @@ def format_spell(line):
     line = format_line(line)
     if line is not None:
         line = spell_correction(line)
-        if 'BC18-' in line:
-            print(line)
         line = remove_empty_line(line)
         if line is not None:
             line = format_numbers(line)
@@ -308,7 +313,7 @@ def run(filename):
     file = open(filename)
     lines = file.readlines()
     new_file = map(format_spell,lines)
-    filename = filename.split('.')[0]+'result.txt'
+    #filename = filename.split('.')[0]+'result.txt'
     result_file = open(filename,'w+',encoding='utf8')
     result_file.writelines(new_file)
     result_file.close()

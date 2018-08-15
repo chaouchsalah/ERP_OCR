@@ -57,6 +57,13 @@ def extract_mode(line):
         end = line.find(' ')
         return line[:end].strip()
     return None
+def extract_disway(line):
+    result = re.search(extract.disway,line)
+    if result is not None:
+        text,_,_ = extract_match(result,line)
+        text = text.split()
+        extracted_data['date_facture'] = text[0]
+        extracted_data['client'] = text[1]
 # Extract the value of the field "ttc"
 def extract_ttc(line):
     result = re.search(extract.expressions_ttc,line)
@@ -247,15 +254,16 @@ def extract_tel(line,field):
     if result is not None:
         _,_,end = extract_match(result,line)
         # Regex for the end of the field 'telephone'
-        result = re.search(r'[\s]+[^0-9]|[\n]',line[end:])
+        result = re.search(r'[\s]{2,}|[\n]|[\s][^0-9]',line[end:])
         if result is not None:
             _,start,_ = extract_match(result,line[end:])
-            text = line[:start+end]
+            return line[end:end+start]
+            """text = line[:start+end]
             # Regex for the start of the field 'telephone'
-            result = re.search(r'[0-9]|[(]',text)
+            result = re.search(r'[0-9]{3,}|[(][0-9]|[+][0-9]',text)
             if result is not None:
                 _,start,_ = extract_match(result,text)
-                return text[start:]
+                return text[start:]"""
     return None
 # Extract the field 'adresse' if number of line == 1
 def extract_adresse_inline(line,field):
@@ -319,7 +327,7 @@ def run(filename):
     else:
         filename = image_name[0:len(image_name)-2]
     filename += '.txt'
-    print('START '+filename)
+    #print('START '+filename)
     file = open(filename,encoding='utf-8')
     lines = file.readlines()
     temp_lines = '\n'.join(lines)
@@ -334,6 +342,7 @@ def run(filename):
         if facture is not None:
             extracted_data['facture'] = facture
     for line in lines:
+        extract_disway(line)
         verify('date_limite',extract_date_limite,line)
         verify('mode_reglement',inline_component,line)
         verify('tel',extract_tel,line)
@@ -346,5 +355,5 @@ def run(filename):
     verify('adresse',extract_adresse_multilines,lines)
     for component in components:
         verify(component,multilines_component,lines)
-    print('FINISHED '+filename)
+    #print('FINISHED '+filename)
     return extracted_data

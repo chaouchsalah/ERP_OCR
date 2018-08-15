@@ -4,7 +4,7 @@ import re
 class RegexExtractor:
     terms_ttc = ['total','total de la facture','total ttc','ttc']
     terms_tva = ['taux','tva','total tva','tva port']
-    terms_ht = ['sous total','base','total ht','total dh ht']
+    terms_ht = ['sous total','base','total ht','total dh ht','ht']
     terms_rc = ['rc']
     terms_if = ['if','f']
     terms_ice = ['ice','icf']
@@ -31,6 +31,7 @@ class RegexExtractor:
         self.format_date()
         self.format_tel()
         self.format_adresse()
+        self.format_disway()
     # Factory method to generate expressions for 'ht,tva,ttc'
     def expression_factory(self,component,generate):
         # An alternative to the switch statement
@@ -96,8 +97,10 @@ class RegexExtractor:
         return expressions
     # All possible if regex
     def if_component(self,term):
-        expressions = [r'{0}[\s]*[:]?[\s]*[0-9]+'.format(term),
-                        r'(?i)[0-9][.]{0}[.][\s]*[0-9]+'.format(term)]
+        if len(term)>1:
+            expressions = [r'{0}[\s]*[:]?[\s]*[0-9]+'.format(term)]
+        else:
+            expressions = [r'(?i)[0-9][.]{0}[.][\s]*[0-9]+'.format(term)]
         return expressions
     # All possible ice regex
     def ice(self,term):
@@ -179,4 +182,7 @@ class RegexExtractor:
         expressions = r'|'.join(expressions)
         self.adresse_multilines = re.compile(expressions)
         self.nthline_adresse = re.compile(r'[0-9]+[\s][a-z]+|[a-z]+[\s][a-z]+')
+    def format_disway(self):
+        expression = r'(?i)[0-9]{2}[/][0-9]{2}[/][0-9]{4}[\s]+[0-9a-z]+[\s]+[0-9]+[\s]+[0-9a-z]+[-][0-9]+'
+        self.disway = re.compile(expression)
 

@@ -1,3 +1,4 @@
-Sous-Total H.T.                                                7 326,10
-m.-
+sous-total ht 7326.10
+
+montant ttc 8791.32
 

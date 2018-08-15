@@ -132,3 +132,6 @@ class RegexBuilder:
                         r'[^\s][0-9]{4}[/][0-9]{4}[%]']
         expressions = r'|'.join(expressions)
         self.date = re.compile(expressions)
+        expressions = [r'[0-9]{2}[\s]*[/][\s]*[0-9]{2}[\s]*[/][\s]*[0-9]{4}']
+        expressions = r'|'.join(expressions)
+        self.date_spaces = re.compile(expressions)

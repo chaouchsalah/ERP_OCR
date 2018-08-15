@@ -2,12 +2,14 @@ import tempfile
 import cv2
 import numpy as np
 from PIL import Image
+from skew import skew
 
 
 IMAGE_SIZE = 1800
 BINARY_THREHOLD = 180
 blur_value = (1,1)
-kernel_value = (3,3)
+kernel_value = (1,1)
+
 def process_image_for_ocr(file_path,inverse=False):
     filename = file_path.split('.')
     if filename[len(filename)-1]=='png':
@@ -47,6 +49,7 @@ def remove_noise(file_name):
     img = image_smoothening(img)
     not_image = cv2.bitwise_not(img)
     return not_image
+
 def remove_noise_and_smooth(file_name):
     img = cv2.imread(file_name, 0)
     filtered = cv2.adaptiveThreshold(img.astype(np.uint8), 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 41, 3)
@@ -57,21 +60,25 @@ def remove_noise_and_smooth(file_name):
     or_image = cv2.bitwise_or(img, closing)
     return or_image
 
-def run(image,inverse=False,resize=False):
+def run(image,inverse=False,resize=False,facture=False):
     global kernel_value
     global blur_value
     blur_value = (1,1)
-    kernel_value = (3,3)
+    kernel_value = (1,1)
     image_name = image.split('.')
     if len(image_name)==2:
         image_name = image_name[0]
     else:
         image_name = ''.join(image_name[0:len(image_name)-2])
+    if resize:
+        skew(image)
     #print('Pre-processing image : '+image_name)
     filename = image_name+'-processed.png'
     if resize:
         kernel_value = (5,5)
         blur_value = (3,3)
+    if facture:
+        kernel_value = (3,3)
     image = process_image_for_ocr(image,inverse)
     if resize:
         image = cv2.resize(image, (0,0), fx=1.5, fy=1.5)
