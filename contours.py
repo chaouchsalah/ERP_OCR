@@ -4,7 +4,6 @@ import subprocess
 import tempfile
 import numpy as np
 
-cropped = []
 
 # Check if image is close enough to be a replicate
 def between(val1,val2):
@@ -13,14 +12,13 @@ def between(val1,val2):
     return False
 
 # Check if image is a replicate
-def exist(arr):
+def exist(arr,cropped):
     for crop in cropped:
         if between(crop[0],arr[0]) and between(crop[1],arr[1]):
             return True
     return False
 
 def run(image_name):
-    global cropped
     cropped = []
     image = cv2.imread(image_name)
     gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
@@ -42,7 +40,7 @@ def run(image_name):
             if (h>500 and w>400) or w<1300 or (w<400 and h<400):
                 continue
             # Check for replicate
-            if not exist([x,y,w,h]):
+            if not exist([x,y,w,h],cropped):
                 cropped.append([x,y,w,h])
                 crop_img = image[y:y+h, x:x+w]
                 filename = 'cropped/'+str(i)+'.jpg'

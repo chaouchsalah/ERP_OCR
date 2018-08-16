@@ -1,14 +1,12 @@
 import re
-from multiprocessing.dummy import Pool as ThreadPool 
 from regex_builder import RegexBuilder
-import time
 from symspell import SymSpell
 
 build_regex = RegexBuilder()
 spell = SymSpell()
 spell.load_dictionary('new_big.txt')
 # Characters to ignore
-special_chars = [':','.','\n','%','$','€']
+SPECIAL_CHARS = [':','.','\n','%','$','€']
 # Extract the values(text,start,end) from the object re.match
 def extract_match(result,line):
     # The tuple that stores the start and finish of the match
@@ -146,7 +144,7 @@ def remove_unkonwn_word(line):
             # Check if word is a number
             if not re.match(build_regex.number_format,word):
                 if len(word.strip())>0:
-                    if possible_word(word.strip()) or word.strip() in special_chars :
+                    if possible_word(word.strip()) or word.strip() in SPECIAL_CHARS :
                         new_line.append(word)
                     else :
                         if '\n' in word:
@@ -178,7 +176,7 @@ def remove_one_letter_word(line):
     for word in line :
         word_test = word.strip()
         single_letters = ['a','m']
-        if len(word_test)!=1 or not word_test.isalpha() or word_test.lower() in single_letters or word_test in special_chars:
+        if len(word_test)!=1 or not word_test.isalpha() or word_test.lower() in single_letters or word_test in SPECIAL_CHARS:
             new_line.append(word)
     line = ' '.join(new_line)
     return line
@@ -242,7 +240,7 @@ def spell_correction(line):
             # Remove whitespaces
             new_line = re.sub(build_regex.whitespace,' ',line)
             # Remove special characters
-            for char in special_chars:
+            for char in SPECIAL_CHARS:
                 new_line = new_line.replace(char,'')
             new_line = re.sub(build_regex.number,'',new_line)
             # The ratio (15%) for a line to be meaningful

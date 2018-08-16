@@ -11,6 +11,7 @@ class RegexExtractor:
     terms_patente = ['patente','tp','taxe professionnelle']
     terms_cnss = ['cnss']
     def __init__(self):
+        print('exec')
         terms = {
             'tva':self.tva,
             'ht':self.ht,
