@@ -258,12 +258,6 @@ def extract_tel(line,field):
         if result is not None:
             _,start,_ = extract_match(result,line[end:])
             return line[end:end+start]
-            """text = line[:start+end]
-            # Regex for the start of the field 'telephone'
-            result = re.search(r'[0-9]{3,}|[(][0-9]|[+][0-9]',text)
-            if result is not None:
-                _,start,_ = extract_match(result,text)
-                return text[start:]"""
     return None
 # Extract the field 'adresse' if number of line == 1
 def extract_adresse_inline(line,field):
@@ -305,6 +299,8 @@ def extract_adresse_multilines(lines,field):
             return adresse
     return None
 infos = ['rc','if','ice','patente','cnss']
+# TVA 2 cases : 'montant' or 'percent'
+components = ['ht','tva','ttc','tva']
 # Check if field has not been already extracted
 # Check if field is in text
 def verify(field,extraction,text):
@@ -315,8 +311,6 @@ def verify(field,extraction,text):
                 extracted_data['montant tva'] = variable
             else:
                 extracted_data[field] = variable
-# TVA 2 cases : 'montant' or 'percent'
-components = ['ht','tva','ttc','tva']
 extracted_data = {}
 def run(filename):
     global extracted_data

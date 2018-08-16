@@ -4,10 +4,7 @@ import os
 language = 'fra'
 keyword_whitelist = 'tessedit_char_whitelist='
 whitelist = keyword_whitelist + 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ°1234567890|%/()$€,.:+-\'# '
-def run(image,facture=False):
-    psm = '6'
-    if facture:
-        psm = '7'
+def run(image):
     image_name = image.split('.')
     if len(image_name)==2:
         image = image_name[0]
@@ -20,7 +17,7 @@ def run(image,facture=False):
         '-l',language,
         '-c',whitelist,
         '-c','preserve_interword_spaces=1',
-        '-psm',psm]
+        '-psm','6']
     subprocess.run(comm, shell=True)
     os.remove(filename)
     #print('OCR step finishes')

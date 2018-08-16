@@ -39,7 +39,7 @@ def run(image_name):
             # Extract the rectangle bounding contours
             [x,y,w,h] = cv2.boundingRect(contour)
             # Ignore small and large images
-            if (h>500 and w>400) or w<1600 or (w<400 and h<400):
+            if (h>500 and w>400) or w<1300 or (w<400 and h<400):
                 continue
             # Check for replicate
             if not exist([x,y,w,h]):

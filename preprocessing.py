@@ -60,7 +60,7 @@ def remove_noise_and_smooth(file_name):
     or_image = cv2.bitwise_or(img, closing)
     return or_image
 
-def run(image,inverse=False,resize=False,facture=False):
+def run(image,inverse=False,resize=False):
     global kernel_value
     global blur_value
     blur_value = (1,1)
@@ -70,15 +70,11 @@ def run(image,inverse=False,resize=False,facture=False):
         image_name = image_name[0]
     else:
         image_name = ''.join(image_name[0:len(image_name)-2])
-    if resize:
-        skew(image)
     #print('Pre-processing image : '+image_name)
     filename = image_name+'-processed.png'
     if resize:
         kernel_value = (5,5)
         blur_value = (3,3)
-    if facture:
-        kernel_value = (3,3)
     image = process_image_for_ocr(image,inverse)
     if resize:
         image = cv2.resize(image, (0,0), fx=1.5, fy=1.5)
