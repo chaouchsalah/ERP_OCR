@@ -7,10 +7,6 @@ from os import listdir
 import os
 from barcode import decode
 
-"""images = []
-for i in range(4,5):
-    filename = 'test'+str(i)+'.jpg'
-    images.append(filename)"""
 
 # If true inverse the binarisation of the image
 def is_inverse(extracted_data):
@@ -63,10 +59,3 @@ def run(images):
     for image in images:
         results.append({image:process(image)})
     return results
-
-"""def run():
-    results = []
-    for image in images:
-        results.append(process(image))
-    print(results)
-run()"""

@@ -2,7 +2,6 @@ import tempfile
 import cv2
 import numpy as np
 from PIL import Image
-from skew import skew
 
 
 IMAGE_SIZE = 1800

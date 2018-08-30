@@ -325,6 +325,7 @@ def run(filename):
     file = open(filename,encoding='utf-8')
     lines = file.readlines()
     temp_lines = '\n'.join(lines)
+    extracted_data['extracted_text'] = temp_lines
     facture = extract_facture(temp_lines)
     client = extract_client(temp_lines)
     if client is not None:

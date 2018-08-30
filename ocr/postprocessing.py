@@ -69,6 +69,9 @@ def correct_numbers(line):
 def check_num(line):
     line = re.sub(build_regex.compiled_factures,'facture :',line)
     line = re.sub(build_regex.compiled_bons,'bon livraison :',line)
+    result = re.search(build_regex.compiled_bons,line)
+    if result is not None:
+        print(line)
     line = re.sub(build_regex.compiled_pages,'page :',line)
     line = re.sub(build_regex.compiled_commandes,'commande :',line)
     line = re.sub(build_regex.compiled_clients,'client ',line)
