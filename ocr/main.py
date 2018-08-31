@@ -4,6 +4,7 @@ import postprocessing
 import extraction
 import contours
 from os import listdir
+from os import path
 import os
 from barcode import decode
 
@@ -57,5 +58,9 @@ def process(filename):
 def run(images):
     results = []
     for image in images:
-        results.append({image:process(image)})
-    return results
+        if path.isfile(image):
+            results.append({image:process(image)})
+    if len(results)>0:
+        return results
+    else:
+        return False

@@ -8,8 +8,11 @@ def process_image():
     response = dict(request.json)
     images = list(response['images'])
     if len(images) == 0:
-        return jsonify({'success':False,'message':'No images were found'})
-    return jsonify({'success':True,'message':'Images processed successfully','result':run(images)})
+        return jsonify({'status':'Bad request','code':400,'message':'Pas d\'images passes en parametres'})
+    result = run(images)
+    if not result:
+        return jsonify({'status':'Not found','code':404,'message':'Les images passes en parametres sont introuvables'})
+    return jsonify({'status':'OK','code':200,'message':'Les images ont ete bien traite','result':result})
 
 @app.errorhandler(404)
 def not_found(error):
