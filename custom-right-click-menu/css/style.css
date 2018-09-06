@@ -1,0 +1,14 @@
+.vmenu {
+    border: 1px solid #aaa;
+    position: absolute;
+    background: #fff;
+    display: none;
+    font-size: 0.9em;
+}
+
+.vmenu .first_li span {
+    width: 160px;
+    display: block;
+    padding: 5px 10px;
+    cursor: pointer
+}

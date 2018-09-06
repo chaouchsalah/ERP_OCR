@@ -1,0 +1,226 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+@import url(https://fonts.googleapis.com/css?family=Great+Vibes);
+body {
+  background: #02AAB0;
+  background: -webkit-linear-gradient(to left, #02AAB0, #00CDAC);
+  background: linear-gradient(to left, #02AAB0, #00CDAC);
+  font-family: "Roboto", sans-serif;
+}
+body:before {
+  z-index: -999;
+  position: relative;
+  display: block;
+  top: 10vh;
+  text-align: center;
+  content: 'Right-click anywhere';
+  font-size: 50px;
+  font-family: 'Great Vibes', cursive;
+  color: rgba(255, 255, 255, 0.5);
+}
+body:after {
+  z-index: -998;
+  position: relative;
+  display: block;
+  top: 8vh;
+  text-align: center;
+  font-size: 35px;
+  font-family: 'Great Vibes', cursive;
+  color: rgba(255, 255, 255, 0.5);
+  content: '(corner friendly)';
+}
+
+.toastwrp {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  overflow: hidden;
+  z-index: -999;
+}
+
+.toast {
+  position: absolute;
+  border-radius: 3px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.43);
+  color: rgba(255, 255, 255, 0.84);
+  animation-name: toast;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  transition-timing-function: cubic-bezier(0.27, 0.81, 0.86, 1.37);
+}
+
+@keyframes toast {
+  0% {
+    top: 100vh;
+  }
+  30% {
+    top: 90vh;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    top: 90vh;
+  }
+}
+/*
+ DEMO
+*/
+.demoHover {
+  background-color: #4CB8C4;
+  color: #fff;
+  display: block;
+  vertical-align: middle;
+  line-height: 40px;
+}
+.demoHover:after {
+  position: absolute;
+  width: 4px;
+  height: 36px;
+  top: 2px;
+  left: 2px;
+  background-color: rgba(0, 0, 0, 0.3);
+  content: '';
+}
+
+/*
+ BASIC MENU
+*/
+.ctxMenu, .revCtxMenu, .subMenu {
+  cursor: pointer;
+  position: absolute;
+  border-radius: 2px;
+  width: 150px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05) inset, 0px 0px 4px #555;
+  animation-duration: .2s;
+  animation-iteration-count: 1;
+  transition: .2s;
+}
+.ctxMenu li, .revCtxMenu li, .subMenu li {
+  position: relative;
+  display: block;
+  vertical-align: middle;
+  line-height: 40px;
+  list-style-type: none;
+  width: 150px;
+  height: 40px;
+}
+.ctxMenu li:hover, .revCtxMenu li:hover, .subMenu li:hover {
+  background-color: #4CB8C4;
+  color: white;
+}
+.ctxMenu li#frtItem, .revCtxMenu li#frtItem, .subMenu li#frtItem {
+  color: #8a8a8a;
+}
+.ctxMenu li#frtItem:hover, .revCtxMenu li#frtItem:hover, .subMenu li#frtItem:hover {
+  color: #fff;
+}
+.ctxMenu li:before, .revCtxMenu li:before, .subMenu li:before {
+  position: absolute;
+  visibility: hidden;
+  width: 4px;
+  height: 36px;
+  top: 2px;
+  left: 2px;
+  background-color: rgba(0, 0, 0, 0.3);
+  content: '';
+}
+.ctxMenu li#frtItem:after, .revCtxMenu li#frtItem:after, .subMenu li#frtItem:after {
+  position: inherit;
+  right: -10%;
+  display: inline-block;
+  border-top: 1px solid #a9a9a9;
+  border-right: 1px solid #a9a9a9;
+  transform: rotate(54deg) skew(20deg);
+  font-size: 20px;
+  width: 8px;
+  height: 8px;
+  content: '';
+}
+.ctxMenu li:hover:before, .revCtxMenu li:hover:before, .subMenu li:hover:before {
+  visibility: visible;
+}
+.ctxMenu:hover, .revCtxMenu:hover, .subMenu:hover {
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.05) inset, 0px 4px 8px #555;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* ul > li{
+  // position:relative;
+  &#frtItem{
+    color:hsla(237, 0%, 54%, 1);
+    &:hover{
+      color:#fff;
+    }
+  }
+  &:before{
+    position:absolute;
+    visibility:hidden;
+    width:4px;
+    height:36px;
+    top:2px;
+    left:2px;
+    background-color:rgba(0,0,0,0.3);
+    content:'';
+  }
+  &#frtItem:after{
+    position:inherit;
+    right:-10%;
+    display: inline-block;
+    border-top: 1px solid #a9a9a9;
+	  border-right: 1px solid #a9a9a9;
+    transform: rotate(54deg) skew(20deg);
+    font-size: 20px;
+    width: 8px;
+	  height: 8px;
+    content:'';
+  }
+  &:hover{
+    &:before{
+        visibility:visible;
+      }
+    }
+} */
+.ctxMenu {
+  animation-name: appear;
+}
+
+.revCtxMenu {
+  animation-name: revappear;
+}
+
+.subMenu {
+  height: 160px;
+  display: none;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.05) inset, 0px 4px 8px #555;
+}
+.subMenu:hover {
+  display: block;
+}
+
+@keyframes appear {
+  0% {
+    transform: scale(0.1) translateX(-100px);
+  }
+  100% {
+    transform: scale(1) translateX(0px);
+  }
+}
+@keyframes revappear {
+  0% {
+    transform: scale(0.1) translateX(100px);
+  }
+  100% {
+    transform: scale(1) translateX(0px);
+  }
+}

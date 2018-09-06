@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Alert, confirm and prompt dialogs</title>
+
+
+	<link rel='stylesheet' href='https://cdn.rawgit.com/OnsenUI/OnsenUI/2.0.0-alpha.13/build/css/onsenui.css'>
+	<link rel='stylesheet' href='https://cdn.rawgit.com/OnsenUI/OnsenUI/2.0.0-alpha.13/build/css/onsen-css-components.css'>
+
+
+
+</head>
+
+<body>
+
+	<ons-page>
+
+		<ons-toolbar>
+			<div class="center">
+				Notifications
+			</div>
+		</ons-toolbar>
+
+		<ons-list ng-controller="NotificationController">
+			<ons-list-header>Material Design</ons-list-header>
+			<ons-list-item ng-click="prompt(true)" modifier="tappable">
+				Prompt
+			</ons-list-item>
+		</ons-list>
+	</ons-page>
+	<script src='https://cdn.rawgit.com/OnsenUI/OnsenUI/2.0.0-alpha.12/build/js/onsenui.js'></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+	<script src='https://cdn.rawgit.com/OnsenUI/OnsenUI/2.0.0-alpha.12/build/js/angular-onsenui.min.js'></script>
+
+
+
+	<script src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>
